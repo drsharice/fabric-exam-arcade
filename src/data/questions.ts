@@ -376,86 +376,85 @@ export const questions: Question[] = [
     explanation:
       'Recently accessed files are cached.',
   },
-  ,
-{
-  id: 'q024',
-  domain: 'Monitor and Optimize Analytics Solutions',
-  type: 'single',
-  question:
-    'Your organization uses Microsoft Fabric for data analytics workflows. There are delays in processing due to inefficient monitoring of data ingestion and transformation. You need to implement a solution for effective monitoring of data workflows. What should you do?',
-  options: [
-    'Configure alerts in the Microsoft Real-Time hub.',
-    'Create a Power BI dashboard.',
-    'Store data events in a data lake.',
-    'Use Azure Monitor.',
-  ],
-  correctAnswer: 'Use Azure Monitor.',
-  explanation:
-    'Azure Monitor is the broad monitoring solution for observing workflow health, performance, and alerts across services.',
-},
-{
-  id: 'q025',
-  domain: 'Monitor and Optimize Analytics Solutions',
-  type: 'single',
-  question:
-    'Your company has implemented a lakehouse architecture using Microsoft Fabric to support large-scale data analytics. Data transformation processes must be optimized for performance and reliability. You need to oversee the data transformation processes to detect any bottlenecks or failures and enhance them accordingly. What should you do?',
-  options: [
-    'Configure alerts for transformation failures.',
-    'Enable detailed logging for performance analysis.',
-    'Implement automated scaling for transformation processes.',
-    'Use basic monitoring tools without advanced configurations.',
-  ],
-  correctAnswer: 'Enable detailed logging for performance analysis.',
-  explanation:
-    'Detailed logging gives the visibility needed to identify bottlenecks, diagnose failures, and improve performance over time.',
-},
-{
-  id: 'q026',
-  domain: 'Implement and Manage Analytics Solutions',
-  type: 'single',
-  question:
-    'You have a Fabric workspace named Workspace1 that contains an Apache Spark job definition named Job1. You have an Azure SQL database named Source1 that has public internet access disabled. You need to ensure that Job1 can access the data in Source1. What should you create?',
-  options: [
-    'An on-premises data gateway',
-    'A managed private endpoint',
-    'An integration runtime',
-    'A data management gateway',
-  ],
-  correctAnswer: 'A managed private endpoint',
-  explanation:
-    'A managed private endpoint allows Fabric resources to securely reach services like Azure SQL when public access is disabled.',
-},
-{
-  id: 'q027',
-  domain: 'Monitor and Optimize Analytics Solutions',
-  type: 'single',
-  question:
-    'You have an Azure Data Lake Storage Gen2 account named storage1 and an Amazon S3 bucket named storage2. You have Delta Parquet files named ProductFile, TripsFile, and StoreFile. You have a Fabric workspace with cache for shortcuts enabled and a lakehouse containing shortcuts aliased as Products, Stores, and Trips. The files are ProductFile in Storage1 (50 MB), TripsFile in Storage2 (2 GB), and StoreFile in Storage2 (25 MB). The data from which shortcuts will be retrieved from the cache?',
-  options: [
-    'Trips and Stores only',
-    'Products and Stores only',
-    'Stores only',
-    'Products only',
-    'Products, Stores, and Trips',
-  ],
-  correctAnswer: 'Products and Stores only',
-  explanation:
-    'The smaller shortcut targets are eligible to benefit from cache, while the large 2 GB Trips file is not the expected cached choice in this scenario.',
-},
-{
-  id: 'q028',
-  domain: 'Govern and Secure Data',
-  type: 'single',
-  question:
-    'Your company has a sales department that uses two Fabric workspaces named Workspace1 and Workspace2. The company decides to implement a domain strategy to organize the workspaces. You need to ensure that a user can create a new domain for the sales department, create two subdomains for the east and west regions, and assign each workspace to its correct subdomain. The solution must follow the principle of least privilege. Which role should you assign to the user?',
-  options: [
-    'Workspace Admin',
-    'Domain admin',
-    'Domain contributor',
-    'Fabric admin',
-  ],
-  correctAnswer: 'Domain admin',
-  explanation:
-    'A Domain admin has the domain-level permissions needed to manage domains and subdomains without granting broader Fabric admin rights.',
-}
+
+  {
+    id: 'q024',
+    domain: 'Monitor and Optimize Analytics Solutions',
+    type: 'single',
+    question:
+      'Your organization uses Microsoft Fabric for data analytics workflows. There are delays in processing due to inefficient monitoring. What should you do?',
+    options: [
+      'Configure alerts in Real-Time hub',
+      'Create a Power BI dashboard',
+      'Store data events',
+      'Use Azure Monitor',
+    ],
+    correctAnswer: 'Use Azure Monitor',
+    explanation: 'Azure Monitor provides centralized monitoring.',
+  },
+
+  {
+    id: 'q025',
+    domain: 'Monitor and Optimize Analytics Solutions',
+    type: 'single',
+    question:
+      'How do you detect bottlenecks in transformation processes?',
+    options: [
+      'Configure alerts',
+      'Enable detailed logging',
+      'Auto scaling',
+      'Basic monitoring',
+    ],
+    correctAnswer: 'Enable detailed logging',
+    explanation: 'Logging reveals bottlenecks.',
+  },
+
+  {
+    id: 'q026',
+    domain: 'Implement and Manage Analytics Solutions',
+    type: 'single',
+    question:
+      'How do you connect to Azure SQL without public access?',
+    options: [
+      'Gateway',
+      'Managed private endpoint',
+      'Integration runtime',
+      'Data gateway',
+    ],
+    correctAnswer: 'Managed private endpoint',
+    explanation: 'Private endpoint enables secure access.',
+  },
+
+  {
+    id: 'q027',
+    domain: 'Monitor and Optimize Analytics Solutions',
+    type: 'single',
+    question:
+      'Which shortcuts use cache?',
+    options: [
+      'Trips and Stores',
+      'Products and Stores',
+      'Stores only',
+      'Products only',
+      'All',
+    ],
+    correctAnswer: 'Products and Stores',
+    explanation: 'Smaller files are cached.',
+  },
+
+  {
+    id: 'q028',
+    domain: 'Govern and Secure Data',
+    type: 'single',
+    question:
+      'Which role should manage domains?',
+    options: [
+      'Workspace Admin',
+      'Domain admin',
+      'Domain contributor',
+      'Fabric admin',
+    ],
+    correctAnswer: 'Domain admin',
+    explanation: 'Least privilege with required permissions.',
+  }
 ]
