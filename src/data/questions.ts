@@ -54,7 +54,7 @@ export const questions: Question[] = [
       'How should you ensure incremental updates in a Fabric lakehouse?',
     options: ['Watermark strategy', 'Full reload', 'Batch processing', 'CDC'],
     correctAnswer: 'Watermark strategy',
-    explanation: 'Watermarks track new/changed data efficiently.',
+    explanation: 'Watermarks track new or changed data efficiently.',
   },
 
   {
@@ -611,5 +611,219 @@ export const questions: Question[] = [
     correctAnswer: 'the organization, project, Git repository, and branch',
     explanation:
       'Those are the core Azure DevOps Git details required to connect a Fabric workspace to the repository branch.',
+  },
+
+  {
+    id: 'q043',
+    domain: 'Implement and Manage Analytics Solutions',
+    type: 'single',
+    question:
+      'You have a Fabric workspace that contains a lakehouse named Lakehouse1. You plan to create a data pipeline named Pipeline1 to ingest data into Lakehouse1. You will use a parameter named param1 to pass an external value into Pipeline1. The param1 parameter has a data type of int. You need to ensure that the pipeline expression returns param1 as an int value. How should you specify the parameter value?',
+    options: [
+      '"@pipeline().parameters.param1"',
+      '"@{pipeline().parameters.param1}"',
+      '"@{pipeline().parameters.[param1]}"',
+      '"@@{pipeline().parameters.param1}"',
+    ],
+    correctAnswer: '"@pipeline().parameters.param1"',
+    explanation:
+      'Using the direct pipeline parameter expression returns the parameter value in its native type.',
+  },
+
+  {
+    id: 'q044',
+    domain: 'Implement and Manage Analytics Solutions',
+    type: 'single',
+    question:
+      'You have a Fabric workspace named Workspace1 that contains a lakehouse named Lakehouse1. Workspace1 contains a Dataflow Gen2 dataflow that copies data from an on-premises SQL Server database to Lakehouse1, a notebook that transforms files and loads the data to Lakehouse1, and a data pipeline that loads a CSV file to Lakehouse1. You need to develop an orchestration solution in Fabric that will load each item one after the other. The solution must be scheduled to run every 15 minutes. Which type of item should you use?',
+    options: ['notebook', 'warehouse', 'Dataflow Gen2 dataflow', 'data pipeline'],
+    correctAnswer: 'data pipeline',
+    explanation:
+      'A data pipeline is the Fabric orchestration item used to schedule and sequence other activities.',
+  },
+
+  {
+    id: 'q045',
+    domain: 'Govern and Secure Data',
+    type: 'single',
+    question:
+      'You have a Fabric warehouse named DW1. DW1 contains a table that stores sales data and is used by multiple sales representatives. You plan to implement row-level security (RLS). You need to ensure that the sales representatives can see only their respective data. Which warehouse object do you require to implement RLS?',
+    options: ['SECURITY POLICY', 'TABLE', 'TRIGGER', 'STORED PROCEDURE'],
+    correctAnswer: 'SECURITY POLICY',
+    explanation:
+      'A security policy is required to enforce row-level security in the warehouse.',
+  },
+
+  {
+    id: 'q046',
+    domain: 'Implement and Manage Analytics Solutions',
+    type: 'single',
+    question:
+      'You have a Fabric workspace named Workspace1 that contains a warehouse named Warehouse1. You plan to deploy Warehouse1 to a new workspace named Workspace2. As part of the deployment process, you need to verify whether Warehouse1 contains invalid references. The solution must minimize development effort and provide detailed information about the invalid references. What should you use?',
+    options: ['a dbt project', 'a deployment pipeline', 'a Python script', 'a database project'],
+    correctAnswer: 'a database project',
+    explanation:
+      'A database project can validate references and provide detailed diagnostics with less custom scripting.',
+  },
+
+  {
+    id: 'q047',
+    domain: 'Ingest and Transform Data',
+    type: 'single',
+    question:
+      'You have a Fabric workspace that contains an eventstream named Eventstream1. Eventstream1 processes data from a thermal sensor by using event stream processing, and then stores the data in a lakehouse. You need to modify Eventstream1 to include the standard deviation of the temperature. Which transform operator should you include in the Eventstream1 logic?',
+    options: ['Expand', 'Group by', 'Union', 'Aggregate'],
+    correctAnswer: 'Aggregate',
+    explanation:
+      'Standard deviation is an aggregate calculation, so the Aggregate operator is required.',
+  },
+
+  {
+    id: 'q048',
+    domain: 'Ingest and Transform Data',
+    type: 'single',
+    question:
+      'You have an Azure event hub. Each event contains fields including Neighbourhood. You need to ingest the events, retain only events that have a Neighbourhood value of Chelsea, and then store the retained events in a Fabric lakehouse. What should you use?',
+    options: ['a KQL queryset', 'an eventstream', 'a streaming dataset', 'Apache Spark Structured Streaming'],
+    correctAnswer: 'an eventstream',
+    explanation:
+      'An eventstream can ingest, filter, and route streaming events into a lakehouse.',
+  },
+
+  {
+    id: 'q049',
+    domain: 'Ingest and Transform Data',
+    type: 'single',
+    question:
+      'You have a Fabric workspace that contains a lakehouse named Lakehouse1. In an external data source, you have data files that are 500 GB each. A new file is added every day. You need to ingest the data into Lakehouse1 without applying any transformations. The solution must trigger when a new file is added and provide the highest throughput. Which type of item should you use to ingest the data?',
+    options: ['Eventstream', 'Dataflow Gen2', 'Streaming dataset', 'Data pipeline'],
+    correctAnswer: 'Data pipeline',
+    explanation:
+      'A data pipeline is the right fit for event-driven file ingestion into a lakehouse at high throughput without transformations.',
+  },
+
+  {
+    id: 'q050',
+    domain: 'Ingest and Transform Data',
+    type: 'single',
+    question:
+      'You are developing a data pipeline named Pipeline1. You need to add a Copy data activity that will copy data from a Snowflake data source to a Fabric warehouse. What should you configure?',
+    options: ['Degree of copy parallelism', 'Fault tolerance', 'Enable staging', 'Enable logging'],
+    correctAnswer: 'Enable staging',
+    explanation:
+      'Staging is commonly required to optimize copy activity when loading into a Fabric warehouse from external sources like Snowflake.',
+  },
+
+  {
+    id: 'q051',
+    domain: 'Ingest and Transform Data',
+    type: 'single',
+    question:
+      'You are implementing a medallion architecture in a Fabric lakehouse. You plan to create a dimension table that contains ID, CustomerCode, CustomerName, CustomerAddress, CustomerLocation, ValidFrom, and ValidTo. You need to ensure that the table supports the analysis of historical sales data by customer location at the time of each sale. Which type of slowly changing dimension (SCD) should you use?',
+    options: ['Type 2', 'Type 0', 'Type 1', 'Type 3'],
+    correctAnswer: 'Type 2',
+    explanation:
+      'Type 2 preserves historical attribute changes over time using validity ranges.',
+  },
+
+  {
+    id: 'q052',
+    domain: 'Ingest and Transform Data',
+    type: 'single',
+    question:
+      'You have a Fabric workspace that contains an eventstream named EventStream1. EventStream1 outputs events to a table named Table1 in a lakehouse. The streaming data is sourced from motorway sensors and represents the speed of cars. You need to add a transformation to EventStream1 to average the car speeds. The speeds must be grouped by non-overlapping and contiguous time intervals of one minute, and each event must belong to exactly one window. Which windowing function should you use?',
+    options: ['sliding', 'hopping', 'tumbling', 'session'],
+    correctAnswer: 'tumbling',
+    explanation:
+      'Tumbling windows are fixed, contiguous, and non-overlapping.',
+  },
+
+  {
+    id: 'q053',
+    domain: 'Ingest and Transform Data',
+    type: 'single',
+    question:
+      'You have an Azure SQL database named DB1. In a Fabric workspace, you deploy an eventstream named EventStreamDB1 to stream record changes from DB1 into a lakehouse. You discover that events are not being propagated to EventStreamDB1. You need to ensure that the events are propagated to EventStreamDB1. What should you do?',
+    options: [
+      'Create a read-only replica of DB1.',
+      'Create an Azure Stream Analytics job.',
+      'Enable Extended Events for DB1.',
+      'Enable change data capture (CDC) for DB1.',
+    ],
+    correctAnswer: 'Enable change data capture (CDC) for DB1.',
+    explanation:
+      'CDC is required to capture and propagate record changes from Azure SQL.',
+  },
+
+  {
+    id: 'q054',
+    domain: 'Implement and Manage Analytics Solutions',
+    type: 'single',
+    question:
+      'You have a Microsoft Power Apps app named App1 that has data stored in Microsoft Dataverse. You need to access the App1 data by using Fabric. What should you use?',
+    options: ['a data pipeline', 'mirroring', 'Dataflow Gen2', 'a shortcut'],
+    correctAnswer: 'mirroring',
+    explanation:
+      'Fabric supports Dataverse access scenarios through mirroring.',
+  },
+
+  {
+    id: 'q055',
+    domain: 'Monitor and Optimize Analytics Solutions',
+    type: 'single',
+    question:
+      'You have a Fabric workspace that contains a warehouse named Warehouse1. Data is loaded daily into Warehouse1 by using data pipelines and stored procedures. You discover that the daily data load takes longer than expected. You need to monitor Warehouse1 to identify the names of users that are actively running queries. Which view should you use?',
+    options: [
+      'sys.dm_exec_connections',
+      'sys.dm_exec_requests',
+      'queryinsights.long_running_queries',
+      'queryinsights.frequently_run_queries',
+      'sys.dm_exec_sessions',
+    ],
+    correctAnswer: 'sys.dm_exec_sessions',
+    explanation:
+      'sys.dm_exec_sessions is used to inspect active sessions and identify the users connected to the warehouse.',
+  },
+
+  {
+    id: 'q056',
+    domain: 'Monitor and Optimize Analytics Solutions',
+    type: 'single',
+    question:
+      'You have a Fabric workspace that contains an eventstream named EventStream1. EventStream1 outputs events to a table in a lakehouse. You need to remove files that are older than seven days and are no longer in use. Which command should you run?',
+    options: ['VACUUM', 'COMPUTE', 'OPTIMIZE', 'CLONE'],
+    correctAnswer: 'VACUUM',
+    explanation:
+      'VACUUM removes files that are no longer referenced and are older than the retention threshold.',
+  },
+
+  {
+    id: 'q057',
+    domain: 'Monitor and Optimize Analytics Solutions',
+    type: 'single',
+    question:
+      'You have a Fabric warehouse named DW1 that loads data by using a data pipeline named Pipeline1. Pipeline1 uses a Copy data activity with a dynamic SQL source. Pipeline1 is scheduled to run every 15 minutes. You discover that Pipeline1 keeps failing. You need to identify which SQL query was executed when the pipeline failed. What should you do?',
+    options: [
+      'From Monitoring hub, select the latest failed run of Pipeline1, and then view the output JSON.',
+      'From Monitoring hub, select the latest failed run of Pipeline1, and then view the input JSON.',
+      'From Real-time hub, select Fabric events, and then review the details of Microsoft.Fabric.ItemReadFailed.',
+      'From Real-time hub, select Fabric events, and then review the details of Microsoft.Fabric.ItemUpdateFailed.',
+    ],
+    correctAnswer:
+      'From Monitoring hub, select the latest failed run of Pipeline1, and then view the input JSON.',
+    explanation:
+      'The input JSON contains the resolved request details, including the dynamic SQL used for the failed run.',
+  },
+
+  {
+    id: 'q058',
+    domain: 'Monitor and Optimize Analytics Solutions',
+    type: 'single',
+    question:
+      'You have a Fabric workspace that contains a write-intensive warehouse named DW1. DW1 stores staging tables that are used to load a dimensional model. The tables are often read once, dropped, and then recreated to process new data. You need to minimize the load time of DW1. What should you do?',
+    options: ['Enable V-Order.', 'Create statistics.', 'Drop statistics.', 'Disable V-Order.'],
+    correctAnswer: 'Disable V-Order.',
+    explanation:
+      'For write-heavy staging workloads with short-lived tables, disabling V-Order can reduce load overhead.',
   },
 ]
