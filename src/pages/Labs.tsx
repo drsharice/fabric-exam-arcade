@@ -1,5 +1,60 @@
 import { useState } from 'react'
-import { labQuestions, type LabQuestion } from '../data/labs'
+import { labQuestions, type LabQuestion, type TableData } from '../data/labs'
+
+function normalizeAnswers(values: string[]) {
+  return [...values].sort()
+}
+
+function arraysEqual(a: string[], b: string[]) {
+  const aSorted = normalizeAnswers(a)
+  const bSorted = normalizeAnswers(b)
+
+  return (
+    aSorted.length === bSorted.length &&
+    aSorted.every((value, index) => value === bSorted[index])
+  )
+}
+
+function renderTable(table: TableData, tableIndex: number) {
+  return (
+    <div key={`${table.title || 'table'}-${tableIndex}`} className="space-y-3">
+      {table.title && (
+        <p className="text-sm font-semibold text-cyan-300">{table.title}</p>
+      )}
+
+      <div className="overflow-x-auto rounded-2xl border border-zinc-800">
+        <table className="min-w-full border-collapse text-left text-sm text-zinc-200">
+          <thead className="bg-zinc-900">
+            <tr>
+              {table.headers.map((header) => (
+                <th
+                  key={header}
+                  className="border-b border-zinc-800 px-4 py-3 font-semibold text-white"
+                >
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row, rowIndex) => (
+              <tr key={`${tableIndex}-${rowIndex}`} className="bg-black/20">
+                {row.map((cell, cellIndex) => (
+                  <td
+                    key={`${tableIndex}-${rowIndex}-${cellIndex}`}
+                    className="whitespace-pre-line border-t border-zinc-800 px-4 py-3"
+                  >
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
 
 export default function Labs() {
   const [currentIndex, setCurrentIndex] = useState<number>(0)
@@ -7,9 +62,11 @@ export default function Labs() {
     Record<string, Record<string, string>>
   >({})
   const [checkedLabs, setCheckedLabs] = useState<Record<string, boolean>>({})
+  const [selectedByLab, setSelectedByLab] = useState<Record<string, string[]>>({})
 
   const lab: LabQuestion = labQuestions[currentIndex]
   const currentAnswers = answersByLab[lab.id] || {}
+  const selectedOptions = selectedByLab[lab.id] || []
   const showResult = checkedLabs[lab.id] || false
 
   const handleChange = (promptId: string, value: string) => {
@@ -20,6 +77,22 @@ export default function Labs() {
         [promptId]: value,
       },
     }))
+  }
+
+  const handleToggleOption = (option: string) => {
+    if (showResult) return
+
+    setSelectedByLab((prev) => {
+      const current = prev[lab.id] || []
+      const exists = current.includes(option)
+
+      return {
+        ...prev,
+        [lab.id]: exists
+          ? current.filter((item) => item !== option)
+          : [...current, option],
+      }
+    })
   }
 
   const handleCheck = () => {
@@ -35,6 +108,11 @@ export default function Labs() {
       [lab.id]: {},
     }))
 
+    setSelectedByLab((prev) => ({
+      ...prev,
+      [lab.id]: [],
+    }))
+
     setCheckedLabs((prev) => ({
       ...prev,
       [lab.id]: false,
@@ -42,23 +120,41 @@ export default function Labs() {
   }
 
   const getLabScore = (labId: string) => {
-    const selectedAnswers = answersByLab[labId] || {}
     const foundLab = labQuestions.find((item: LabQuestion) => item.id === labId)
 
     if (!foundLab) return 0
+
+    if (foundLab.type === 'table-multi') {
+      const selected = selectedByLab[labId] || []
+      const correct = foundLab.correctAnswers || []
+      return arraysEqual(selected, correct) ? 1 : 0
+    }
+
+    const selectedAnswers = answersByLab[labId] || {}
 
     return foundLab.prompts.filter(
       (prompt) => selectedAnswers[prompt.id] === prompt.correctAnswer,
     ).length
   }
 
-  const allAnswered = lab.prompts.every((prompt) => currentAnswers[prompt.id])
+  const allAnswered =
+    lab.type === 'table-multi'
+      ? (selectedOptions.length > 0)
+      : lab.prompts.every((prompt) => currentAnswers[prompt.id])
 
-  const totalCorrect = lab.prompts.filter(
-    (prompt) => currentAnswers[prompt.id] === prompt.correctAnswer,
-  ).length
+  const totalCorrect =
+    lab.type === 'table-multi'
+      ? arraysEqual(selectedOptions, lab.correctAnswers || [])
+        ? 1
+        : 0
+      : lab.prompts.filter(
+          (prompt) => currentAnswers[prompt.id] === prompt.correctAnswer,
+        ).length
 
-  const isPerfect = totalCorrect === lab.prompts.length
+  const totalPossible =
+    lab.type === 'table-multi' ? 1 : lab.prompts.length
+
+  const isPerfect = totalCorrect === totalPossible
 
   return (
     <div className="space-y-6">
@@ -93,7 +189,7 @@ export default function Labs() {
           {labQuestions.map((item: LabQuestion, index: number) => {
             const checked = checkedLabs[item.id] || false
             const score = getLabScore(item.id)
-            const total = item.prompts.length
+            const total = item.type === 'table-multi' ? 1 : item.prompts.length
             const isActive = index === currentIndex
 
             return (
@@ -185,6 +281,12 @@ export default function Labs() {
             <div>{`.execute()`}</div>
           </div>
         </div>
+      ) : lab.type === 'table-multi' ? (
+        <div className="rounded-3xl border border-zinc-700 bg-zinc-950 p-6">
+          <div className="space-y-6">
+            {(lab.tables || []).map((table, index) => renderTable(table, index))}
+          </div>
+        </div>
       ) : (
         <div className="rounded-3xl border border-zinc-700 bg-zinc-950 p-6">
           <div className="space-y-4">
@@ -205,52 +307,91 @@ export default function Labs() {
           Answer Area
         </h2>
 
-        <div className="space-y-6">
-          {lab.prompts.map((prompt) => {
-            const selected = currentAnswers[prompt.id] || ''
-            const isCorrect = selected === prompt.correctAnswer
+        {lab.type === 'table-multi' ? (
+          <div className="space-y-3">
+            {(lab.options || []).map((option: string) => {
+              const selected = selectedOptions.includes(option)
+              const isActuallyCorrect = (lab.correctAnswers || []).includes(option)
 
-            return (
-              <div key={prompt.id} className="space-y-2">
-                <label className="block text-sm font-semibold text-zinc-200">
-                  {prompt.label}
-                </label>
+              let optionClasses = 'border-zinc-700 hover:bg-zinc-900'
 
-                <select
-                  value={selected}
-                  onChange={(e) => handleChange(prompt.id, e.target.value)}
-                  disabled={showResult}
-                  className={`w-full rounded-xl border bg-zinc-900 px-4 py-3 text-white outline-none ${
-                    showResult
-                      ? isCorrect
-                        ? 'border-emerald-400'
-                        : 'border-red-400'
-                      : 'border-zinc-700'
-                  }`}
+              if (!showResult && selected) {
+                optionClasses = 'border-cyan-400 bg-cyan-500/10'
+              }
+
+              if (showResult && isActuallyCorrect) {
+                optionClasses = 'border-emerald-400 bg-emerald-500/10'
+              }
+
+              if (showResult && selected && !isActuallyCorrect) {
+                optionClasses = 'border-red-400 bg-red-500/10'
+              }
+
+              return (
+                <label
+                  key={option}
+                  className={`flex cursor-pointer items-start gap-3 rounded-2xl border px-4 py-3 transition ${optionClasses}`}
                 >
-                  <option value="">Select an answer</option>
-                  {prompt.options.map((option: string) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
+                  <input
+                    type="checkbox"
+                    checked={selected}
+                    onChange={() => handleToggleOption(option)}
+                    disabled={showResult}
+                    className="mt-1"
+                  />
+                  <span className="text-zinc-200">{option}</span>
+                </label>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {lab.prompts.map((prompt) => {
+              const selected = currentAnswers[prompt.id] || ''
+              const isCorrect = selected === prompt.correctAnswer
 
-                {showResult && (
-                  <p
-                    className={`text-sm font-semibold ${
-                      isCorrect ? 'text-emerald-300' : 'text-red-300'
+              return (
+                <div key={prompt.id} className="space-y-2">
+                  <label className="block text-sm font-semibold text-zinc-200">
+                    {prompt.label}
+                  </label>
+
+                  <select
+                    value={selected}
+                    onChange={(e) => handleChange(prompt.id, e.target.value)}
+                    disabled={showResult}
+                    className={`w-full rounded-xl border bg-zinc-900 px-4 py-3 text-white outline-none ${
+                      showResult
+                        ? isCorrect
+                          ? 'border-emerald-400'
+                          : 'border-red-400'
+                        : 'border-zinc-700'
                     }`}
                   >
-                    {isCorrect
-                      ? 'Correct'
-                      : `Correct answer: ${prompt.correctAnswer}`}
-                  </p>
-                )}
-              </div>
-            )
-          })}
-        </div>
+                    <option value="">Select an answer</option>
+                    {prompt.options.map((option: string) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+
+                  {showResult && (
+                    <p
+                      className={`text-sm font-semibold ${
+                        isCorrect ? 'text-emerald-300' : 'text-red-300'
+                      }`}
+                    >
+                      {isCorrect
+                        ? 'Correct'
+                        : `Correct answer: ${prompt.correctAnswer}`}
+                    </p>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )}
 
         <div className="mt-8 flex flex-wrap gap-3">
           <button
@@ -298,7 +439,7 @@ export default function Labs() {
             }`}
           >
             <p className="mb-2 text-lg font-semibold text-white">
-              Score: {totalCorrect} / {lab.prompts.length}
+              Score: {totalCorrect} / {totalPossible}
             </p>
             <p className="text-zinc-300">{lab.explanation}</p>
           </div>

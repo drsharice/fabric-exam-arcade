@@ -1,10 +1,16 @@
-export type LabQuestionType = 'dropdown' | 'code-dropdown'
+export type LabQuestionType = 'dropdown' | 'code-dropdown' | 'table-multi'
 
 export interface DropdownPrompt {
   id: string
   label: string
   options: string[]
   correctAnswer: string
+}
+
+export interface TableData {
+  title?: string
+  headers: string[]
+  rows: string[][]
 }
 
 export interface LabQuestion {
@@ -16,6 +22,10 @@ export interface LabQuestion {
   images: string[]
   prompts: DropdownPrompt[]
   explanation: string
+  codeSnippet?: string
+  tables?: TableData[]
+  options?: string[]
+  correctAnswers?: string[]
 }
 
 export const labQuestions: LabQuestion[] = [
@@ -106,7 +116,11 @@ export const labQuestions: LabQuestion[] = [
       {
         id: 'dataset3',
         label: 'Dataset3:',
-        options: ['Dataflow Gen2 dataflow', 'A KQL queryset', 'A T-SQL statement'],
+        options: [
+          'Dataflow Gen2 dataflow',
+          'A KQL queryset',
+          'A T-SQL statement',
+        ],
         correctAnswer: 'Dataflow Gen2 dataflow',
       },
     ],
@@ -164,5 +178,119 @@ export const labQuestions: LabQuestion[] = [
     ],
     explanation:
       'This merge pattern updates matched rows, inserts new rows, and updates stale target-only rows.',
+  },
+  {
+    id: 'lab005',
+    type: 'table-multi',
+    domain: 'Design and Implement Data Models',
+    title: 'Choose Columns for DimProduct',
+    question:
+      'You have a Fabric workspace that contains a lakehouse named Lakehouse1. Data is ingested into Lakehouse1 as one flat table. You plan to load the data into a dimensional model and implement a star schema. From the original flat table, you create two tables named FactSales and DimProduct. You will track changes in DimProduct. Which three columns should you include in the DimProduct table?',
+    images: [],
+    prompts: [],
+    tables: [
+      {
+        headers: ['Name', 'Description'],
+        rows: [
+          ['TransactionID', 'Contains a unique ID for each transaction'],
+          ['Date', 'Contains the date of a transaction'],
+          ['ProductID', 'Contains a unique ID for each product'],
+          [
+            'ProductColor',
+            'Contains a descriptive attribute that describes the color of each product',
+          ],
+          ['ProductName', 'Contains a unique name for each product'],
+          ['SalesAmount', 'Contains the sales amount of a transaction'],
+        ],
+      },
+    ],
+    options: [
+      'Date',
+      'ProductName',
+      'ProductColor',
+      'TransactionID',
+      'SalesAmount',
+      'ProductID',
+    ],
+    correctAnswers: ['ProductName', 'ProductColor', 'ProductID'],
+    explanation:
+      'DimProduct should contain the product key and descriptive product attributes, not transaction-level facts.',
+  },
+  {
+    id: 'lab006',
+    type: 'table-multi',
+    domain: 'Monitor and Optimize Analytics Solutions',
+    title: 'Identify Cached Shortcuts',
+    question:
+      'You have a Google Cloud Storage (GCS) container named storage1 that contains files shown in the table below. You have a Fabric workspace named Workspace1 that has the cache for shortcuts enabled. Workspace1 contains a lakehouse named Lakehouse1. Lakehouse1 has the shortcuts shown in the second table. You need to read data from all the shortcuts. Which shortcuts will retrieve data from the cache?',
+    images: [],
+    prompts: [],
+    tables: [
+      {
+        title: 'Files in storage1',
+        headers: ['Name', 'Size'],
+        rows: [
+          ['ProductFile.parquet', '8 MB'],
+          ['StoreFile.json', '500 MB'],
+          ['TripsFile.csv', '99 MB'],
+        ],
+      },
+      {
+        title: 'Shortcuts in Lakehouse1',
+        headers: ['Name', 'Source', 'Last accessed'],
+        rows: [
+          ['Products', 'ProductFile', '12 hours ago'],
+          ['Stores', 'StoreFile', '4 hours ago'],
+          ['Trips', 'TripsFile', '48 hours ago'],
+        ],
+      },
+    ],
+    options: [
+      'Stores only',
+      'Products only',
+      'Stores and Products only',
+      'Products, Stores, and Trips',
+      'Trips only',
+      'Products and Trips only',
+    ],
+    correctAnswers: ['Products, Stores, and Trips'],
+    explanation:
+      'This lab uses the answer shown in your screenshot for the shortcut cache scenario.',
+  },
+  {
+    id: 'lab007',
+    type: 'table-multi',
+    domain: 'Implement and Manage Analytics Solutions',
+    title: 'Overwrite Paired Deployment Pipeline Items',
+    question:
+      'You have two Fabric workspaces named Workspace1 and Workspace2. You have a Fabric deployment pipeline named deployPipeline1 that deploys items from Workspace1 to Workspace2. DeployPipeline1 contains all the items in Workspace1. You recently modified the items in Workspace1. Items in Workspace1 that have the same name as items in Workspace2 are currently paired. You need to ensure that the items in Workspace1 overwrite the corresponding items in Workspace2. The solution must minimize effort. What should you do?',
+    images: [],
+    prompts: [],
+    tables: [
+      {
+        headers: ['Workspace', 'Items'],
+        rows: [
+          [
+            'Workspace1',
+            'Model1\nNotebook1\nReport1\nLakehouse1\nPipeline1',
+          ],
+          [
+            'Workspace2',
+            'Model1\nNotebook2\nReport1\nLakehouse2',
+          ],
+        ],
+      },
+    ],
+    options: [
+      'Delete all the items in Workspace2, and then run deployPipeline1.',
+      'Rename each item in Workspace2 to have the same name as the items in Workspace1.',
+      'Back up the items in Workspace2, and then run deployPipeline1.',
+      'Run deployPipeline1 without modifying the items in Workspace2.',
+    ],
+    correctAnswers: [
+      'Run deployPipeline1 without modifying the items in Workspace2.',
+    ],
+    explanation:
+      'Because the same-name items are already paired, you can run the deployment pipeline and let the Workspace1 items overwrite the paired items in Workspace2.',
   },
 ]
