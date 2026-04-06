@@ -65,6 +65,12 @@ export default function Home() {
             >
               All Questions
             </Link>
+            <Link
+  to="/labs"
+  className="rounded-2xl border border-cyan-400/50 bg-cyan-500/10 px-5 py-3 font-semibold text-cyan-300 hover:bg-cyan-500/20"
+>
+  Lab Questions
+</Link>
           </div>
         </div>
 

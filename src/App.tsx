@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Practice from './pages/Practice'
 import Exam from './pages/Exam'
 import Results from './pages/Results'
+import Labs from './pages/Labs'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="practice" element={<Practice />} />
           <Route path="exam" element={<Exam />} />
           <Route path="results" element={<Results />} />
+          <Route path="labs" element={<Labs />} />
         </Route>
       </Routes>
     </HashRouter>

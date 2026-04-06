@@ -31,6 +31,12 @@ export default function Layout() {
             >
               Exam
             </Link>
+            <Link
+        to="/labs"
+        className="rounded-lg border border-zinc-700 px-3 py-2 hover:bg-zinc-800"
+        >
+    Labs
+  </Link>
           </nav>
         </div>
       </header>
