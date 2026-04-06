@@ -37,6 +37,12 @@ export default function Layout() {
         >
     Labs
   </Link>
+  <Link
+    to="/multi-select"
+    className="rounded-lg border border-zinc-700 px-3 py-2 hover:bg-zinc-800"
+  >
+    Multi
+  </Link>
           </nav>
         </div>
       </header>

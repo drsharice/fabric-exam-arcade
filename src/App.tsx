@@ -5,6 +5,7 @@ import Practice from './pages/Practice'
 import Exam from './pages/Exam'
 import Results from './pages/Results'
 import Labs from './pages/Labs'
+import MultiSelect from './pages/MultiSelect'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="exam" element={<Exam />} />
           <Route path="results" element={<Results />} />
           <Route path="labs" element={<Labs />} />
+          <Route path="multi-select" element={<MultiSelect />} />
         </Route>
       </Routes>
     </HashRouter>
